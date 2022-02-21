@@ -4,7 +4,9 @@
 
 from fastapi import APIRouter
 from schemas.booking import Booking
-from servers.booking import get_dc,main
+from servers.booking import main
+
+from extensions.json_response import resp_200
 
 
 api = APIRouter()
@@ -13,4 +15,5 @@ api = APIRouter()
 async def booking(
         data:Booking
 ):
-   return await main(data)
+   result = await main(data)
+   return resp_200(data=result)
