@@ -49,7 +49,7 @@ class DC:
 
     async def new_obj(self):
         self.playwright = await async_playwright().start()
-        self.browser = await self.playwright.chromium.launch(
+        self.browser = await self.playwright.webkit.launch(
             headless=False,
             downloads_path='data',
         )
@@ -280,7 +280,8 @@ def process_page_(page: Page):
 
 class DC_:
     def __init__(self, data: Booking):
-        self.url = 'https://www.hapag-lloyd.cn/zh/online-business/quotation/quick-quotes-solution.html'
+        # self.url = 'https://www.hapag-lloyd.cn/zh/online-business/quotation/quick-quotes-solution.html'
+        self.url = 'https://www.hapag-lloyd.cn/zh/home.html'
         self.data = data
         # self.username = self.data.username
         # self.pwd = self.data.pwd
@@ -290,7 +291,7 @@ class DC_:
 
     def new_obj(self):
         self.playwright = sync_playwright().start()
-        self.browser = self.playwright.chromium.launch(
+        self.browser = self.playwright.firefox.launch(
             headless=False,
             downloads_path='data',
         )
@@ -312,7 +313,7 @@ class DC_:
             accept_downloads=True,
             # viewport={'width': 1920, 'height': 1080}
         )
-        self.context.on('page', process_page_)
+        # self.context.on('page', process_page_)
         self.page = self.context.new_page()
         self.context.add_cookies(cookies=self.data.cookies)
 
@@ -345,7 +346,13 @@ class DC_:
 
         except Exception as e:
             pass
-        self.wait_loading(self.page, second=5)
+        self.wait_loading(self.page,second=3)
+
+        self.page.click('(//span[text()="报价"])[last()]')
+        with self.page.expect_navigation():
+            self.page.click('(//span[text()="快捷报价"])[last()]')
+        self.wait_loading(self.page, second=2)
+
 
         if self.page.is_visible('//*[@id="hal-cookieconsent-button"]'):
             self.page.click('//*[@id="hal-cookieconsent-button"]')

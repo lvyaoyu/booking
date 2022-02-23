@@ -6,7 +6,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    max_workers = 10
+    max_workers = 5
 
 
 settings = Settings()
